@@ -1,0 +1,139 @@
+// pdfReader.js
+// Clean, simple PDF loader with DEV MODE output
+import { parsePP } from "./parsePP.js";
+import { applyGlyphMap } from "./glyphMap.js";
+
+const DEV_MODE = "structured";  // turn off later when finished
+
+function updateStatus(msg) {
+  document.getElementById("pdfStatus").textContent = msg;
+}
+
+// Load PDF and return full extracted text
+export async function loadPDF(file) {
+  const pdf = await pdfjsLib.getDocument({ url: URL.createObjectURL(file) }).promise;
+  let fullText = "";
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const strings = content.items.map(item => item.str);
+    fullText += strings.join("\n") + "\n";
+  }
+  return fullText;
+}
+
+// Main reader function your button will call
+export async function readPDFAndDecode(file) {
+  const rawText = await loadPDF(file);
+
+  // DEV MODE: show raw text panel
+  if (DEV_MODE === "raw") {
+    const rawOut = document.getElementById("devRawOutput");
+    if (rawOut) rawOut.textContent = rawText;
+  }
+
+  // Remove stray UTF-8 junk (Â)
+  let cleanText = rawText.replace(/Â/g, "");
+   // ⭐⭐ INSERT THIS BLOCK RIGHT HERE ⭐⭐
+  // Decode ns / hd / nk BEFORE glyphMap introduces fractions
+  cleanText = cleanText
+    .replace(/¹/g, "ⁿˢ")
+    .replace(/²/g, "ʰᵈ")
+    .replace(/³/g, "ⁿᵏ");
+  // ⭐⭐ END INSERT ⭐⭐
+
+  // DEV MODE: show cleaned text
+  if (DEV_MODE === "clean") {
+    const cleanOut = document.getElementById("devCleanOutput");
+    if (cleanOut) cleanOut.textContent = cleanText;
+  }
+
+  // Decode Brisnet symbols
+  const decodedText = applyGlyphMap(cleanText);
+
+  // DEV MODE: show decoded text panel
+  if (DEV_MODE === "decoded") {
+    const decodedOut = document.getElementById("devDecodedOutput");
+   if (decodedOut) decodedOut.textContent = decodedText;
+ }
+
+ // return decodedText;   // parser will use this next
+//}
+// ===============================
+// 🔥 STRUCTURED PARSE OUTPUT
+// ===============================
+if (DEV_MODE === "structured") {
+  const parsed = parsePP(decodedText);
+
+  let out = "=========== PARSED STRUCTURE ===========\n\n";
+
+  for (const h of parsed.horses) {
+    out += `HORSE ${h.post || "?"} — ${h.name || "UNKNOWN"}\n`;
+
+    h.pp.forEach((pp) => {
+     // out += `   Date: ${pp.date} ${pp.track} ${pp.race}\n`;
+      out += `   ${pp.date}${pp.track}${pp.race}\n`;
+    
+      //   out += `    Date: ${pp.date}\n`;
+    //  out += `    Track: ${pp.track}\n`;
+     // out += `    Race#: ${pp.race}\n`;
+      out += `     Glyph: ${pp.glyph}\n`;
+      out += `  Distance: ${pp.distance}\n`;
+      out += `   Surface: ${pp.surface}\n`;
+
+      out += `    Leader Times:\n`;
+      out += `        1c: ${pp.leaderTimes.leader1.raw || ""} ${pp.leaderTimes.leader1.sup || ""}\n`;
+      out += `        2c: ${pp.leaderTimes.leader2.raw || ""} ${pp.leaderTimes.leader2.sup || ""}\n`;
+      out += `        3c: ${pp.leaderTimes.leader3.raw || ""} ${pp.leaderTimes.leader3.sup || ""}\n`;
+      out += `     Final: ${pp.leaderTimes.leaderFinal.raw || ""} ${pp.leaderTimes.leaderFinal.sup || ""}\n`;
+
+      out += `        RR: ${pp.rr}\n`;
+      out += `  RaceType: ${pp.raceType}\n`;
+      out += `        CR: ${pp.cr}\n`;
+
+     // out += `      Pace:\n`;
+      out += `        E1: ${pp.pace.e1}\n`;
+      out += `        E2: ${pp.pace.e2}\n`;
+      out += `        LP: ${pp.pace.lp}\n`;
+
+      out += `  1c Shape: ${pp.oneC}\n`;
+      out += `  2c Shape: ${pp.twoC}\n`;
+      out += `       SPD: ${pp.spd}\n`
+      out += `      Post: ${pp.pp}\n`
+      out += `     Start: ${pp.gate.gc}${pp.gate.lg}\n`
+      out += `   1stCall: ${pp.first.c1}${pp.first.lg}\n`
+      out += `   2ndCall: ${pp.second.c2}${pp.second.lg}\n`
+      out += `   StrCall: ${pp.straight.str}${pp.straight.lg}\n`
+      out += `    Finish: ${pp.finish.fin}${pp.finish.lg}\n`
+      out += `   Jockey#: ${pp.jockey}\n`
+      out += ` Equipment: ${pp.equipment}\n`
+      out += `      Odds: ${pp.odds}\n`
+      out += ` Finishers: ${pp.win.wn}${pp.win.lg}${pp.place.pl}${pp.place.lg}${pp.show.sh}${pp.show.lg}\n`
+      out += `  Comments: ${pp.comment}\n`
+      out += `     Field: ${pp.field}\n`
+    });
+
+    out += "========================================\n\n";
+  }
+
+    const structuredOut = document.getElementById("devStructuredOutput");
+     if (structuredOut) structuredOut.textContent = out;
+// add json
+  // Save parsedPP.json locally (or later push to repo)
+const saveParsedPP = (parsed) => {
+  const blob = new Blob([JSON.stringify(parsed, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "parsedPP.json";
+  a.click();
+};
+
+// Call it once parsing is done
+saveParsedPP(parsed);
+  // end json 
+    return decodedText;
+   }
+  return decodedText;
+  }

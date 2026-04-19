@@ -1,5 +1,3 @@
-jockey_stats.txt
-
 // Jockey_Stats
 
 #,	Jockey,	Starts,	Wins,	Places,	Shows,	Earnings,	Win%,	WPS%

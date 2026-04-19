@@ -119,20 +119,7 @@ if (DEV_MODE === "structured") {
 
     const structuredOut = document.getElementById("devStructuredOutput");
      if (structuredOut) structuredOut.textContent = out;
-// add json
-  // Save parsedPP.json locally (or later push to repo)
-const saveParsedPP = (parsed) => {
-  const blob = new Blob([JSON.stringify(parsed, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "parsedPP.json";
-  a.click();
-};
 
-// Call it once parsing is done
-saveParsedPP(parsed);
-  // end json 
     return decodedText;
    }
   return decodedText;

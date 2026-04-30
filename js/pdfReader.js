@@ -73,14 +73,14 @@ if (DEV_MODE === "structured") {
 
     h.pp.forEach((pp) => {
      // out += `   Date: ${pp.date} ${pp.track} ${pp.race}\n`;
-      out += `   ${pp.date}${pp.track}${pp.race}\n`;
+ //     out += `   ${pp.date}${pp.track}${pp.race}\n`;
     
       //   out += `    Date: ${pp.date}\n`;
     //  out += `    Track: ${pp.track}\n`;
      // out += `    Race#: ${pp.race}\n`;
-      out += `     Glyph: ${pp.glyph}\n`;
+  //    out += `     Glyph: ${pp.glyph}\n`;
       out += `  Distance: ${pp.distance}\n`;
-      out += `   Surface: ${pp.surface}\n`;
+  //    out += `   Surface: ${pp.surface}\n`;
 
       out += `    Leader Times:\n`;
       out += `        1c: ${pp.leaderTimes.leader1.raw || ""} ${pp.leaderTimes.leader1.sup || ""}\n`;
@@ -88,30 +88,30 @@ if (DEV_MODE === "structured") {
       out += `        3c: ${pp.leaderTimes.leader3.raw || ""} ${pp.leaderTimes.leader3.sup || ""}\n`;
       out += `     Final: ${pp.leaderTimes.leaderFinal.raw || ""} ${pp.leaderTimes.leaderFinal.sup || ""}\n`;
 
-      out += `        RR: ${pp.rr}\n`;
-      out += `  RaceType: ${pp.raceType}\n`;
-      out += `        CR: ${pp.cr}\n`;
+   //   out += `        RR: ${pp.rr}\n`;
+  //    out += `  RaceType: ${pp.raceType}\n`;
+  //    out += `        CR: ${pp.cr}\n`;
 
      // out += `      Pace:\n`;
-      out += `        E1: ${pp.pace.e1}\n`;
-      out += `        E2: ${pp.pace.e2}\n`;
-      out += `        LP: ${pp.pace.lp}\n`;
+   //   out += `        E1: ${pp.pace.e1}\n`;
+  //    out += `        E2: ${pp.pace.e2}\n`;
+   //   out += `        LP: ${pp.pace.lp}\n`;
 
-      out += `  1c Shape: ${pp.oneC}\n`;
-      out += `  2c Shape: ${pp.twoC}\n`;
-      out += `       SPD: ${pp.spd}\n`
-      out += `      Post: ${pp.pp}\n`
-      out += `     Start: ${pp.gate.gc}${pp.gate.lg}\n`
+  //    out += `  1c Shape: ${pp.oneC}\n`;
+  //    out += `  2c Shape: ${pp.twoC}\n`;
+  //    out += `       SPD: ${pp.spd}\n`
+  //    out += `      Post: ${pp.pp}\n`
+    //  out += `     Start: ${pp.gate.gc}${pp.gate.lg}\n`
       out += `   1stCall: ${pp.first.c1}${pp.first.lg}\n`
       out += `   2ndCall: ${pp.second.c2}${pp.second.lg}\n`
       out += `   StrCall: ${pp.straight.str}${pp.straight.lg}\n`
       out += `    Finish: ${pp.finish.fin}${pp.finish.lg}\n`
       out += `   Jockey#: ${pp.jockey}\n`
-      out += ` Equipment: ${pp.equipment}\n`
-      out += `      Odds: ${pp.odds}\n`
-      out += ` Finishers: ${pp.win.wn}${pp.win.lg}${pp.place.pl}${pp.place.lg}${pp.show.sh}${pp.show.lg}\n`
-      out += `  Comments: ${pp.comment}\n`
-      out += `     Field: ${pp.field}\n`
+   //   out += ` Equipment: ${pp.equipment}\n`
+   //   out += `      Odds: ${pp.odds}\n`
+   //   out += ` Finishers: ${pp.win.wn}${pp.win.lg}${pp.place.pl}${pp.place.lg}${pp.show.sh}${pp.show.lg}\n`
+  //    out += `  Comments: ${pp.comment}\n`
+  //    out += `     Field: ${pp.field}\n`
     });
 
     out += "========================================\n\n";
